@@ -24,29 +24,54 @@
         
         <div class="section">
             <h2>Image Printing</h2>
-            <form id="image-form" action="{{ url_for('main.print_image_route') }}" method="post" enctype="multipart/form-data">
+            <form id="image-form" action="{{ url_for('main.print_image_route') }}" method="post" enctype="multipart/form-data" onsubmit="return validateImageForm()">
                 <label for="image-name">Name (optional):</label>
                 <input type="text" id="image-name" name="image_name" maxlength="48">
-                <label for="image">Upload Image:</label>
-                <input type="file" id="image" name="image" accept="image/*" required>
+                <div>
+                    <button type="button" id="upload-image-button">Upload Image</button>
+                    <button type="button" id="use-camera-button">Use Camera</button>
+                </div>
+                <input type="file" id="image" name="image" accept="image/*" style="display: none;">
+                <div id="camera-container" style="display: none;">
+                    <video id="camera-view" autoplay></video>
+                    <button type="button" id="take-picture-button">Take Picture</button>
+                </div>
                 <label for="dither">Dithering:</label>
-                <select id="dither" name="dither" class="dither-dropdown">
+                <select id="dither" name="dither">
                     <option value="FLOYDSTEINBERG">Floyd-Steinberg</option>
                     <option value="BAYER_2x2">Bayer 2x2</option>
                     <option value="BAYER_4x4">Bayer 4x4</option>
                     <option value="BAYER_8x8">Bayer 8x8</option>
                     <option value="THRESHOLD">Threshold</option>
                 </select>
-                <!-- <label for="edge-enhance">Edge Enhance:</label>
-                <input type="checkbox" id="edge-enhance" name="edge_enhance"> -->
-                <br>
-                <button type="submit">Print Image</button>
+                <button type="submit" id="print-image-button" disabled>Print Image</button>
             </form>
             <h3>Preview:</h3>
-            <img id="preview" src="" alt="Image Preview" style="max-width: 100%; height: auto;">
+            <div class="preview-container">
+                <img id="preview" src="" alt="Image Preview" style="max-width: 100%; height: auto;">
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="section">
+            <h2>Draw and Print</h2>
+            <a href="{{ url_for('main.drawing_page') }}">
+                <img id="drawing-screenshot" src="{{ url_for('static', filename='images/drawing-screenshot.png') }}" alt="Drawing Canvas" style="border:1px solid #000;">
+            </a>
         </div>
     </div>
     
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        function validateImageForm() {
+            const imageInput = document.getElementById('image');
+            if (!imageInput.files.length) {
+                alert('Please upload an image or take a picture.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

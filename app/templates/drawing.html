@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Draw and Print</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        #drawing-canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: white;
+            image-rendering: pixelated;
+        }
+        .active-tool {
+            background-color: #ddd; /* Highlight color for active tool */
+        }
+    </style>
+</head>
+<body>
+    <h1>Draw and Print</h1>
+    
+    <div class="container">
+        <div class="section">
+            <canvas id="drawing-canvas" width="300" height="300" style="border:1px solid #000;"></canvas>
+            <button id="save-drawing">Save Drawing</button>
+            <button id="print-drawing">Print Drawing</button>
+            <button id="tool-pencil">Pencil</button>
+            <button id="tool-line">Line</button>
+            <button id="tool-rectangle">Rectangle</button>
+            <button id="tool-circle">Circle</button>
+            <button id="tool-text">Text</button>
+            <button id="tool-eraser">Eraser</button>
+            <button id="undo">Undo</button>
+            <br>            <br>
+
+            <button id="clear-drawing">Clear Drawing</button>
+
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/drawing.js') }}"></script>
+</body>
+</html>

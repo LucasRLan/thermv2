@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const drawingCanvas = document.getElementById('drawing-canvas');
     const clearDrawingButton = document.getElementById('clear-drawing');
     const saveDrawingButton = document.getElementById('save-drawing');
+    const printDrawingButton = document.getElementById('print-drawing');
     const toolPencilButton = document.getElementById('tool-pencil');
     const toolLineButton = document.getElementById('tool-line');
     const toolRectangleButton = document.getElementById('tool-rectangle');
@@ -18,9 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let history = []; // To store the history of drawings
 
     // Set the canvas resolution and scaling factor
-    const canvasWidth = 300;
-    const canvasHeight = 300;
-    const scaleFactor = 2; // Increase this value to make pixels bigger
+    const canvasWidth = 576; // Set to printer width
+    const canvasHeight = 576;
+    const scaleFactor = 1; // Increase this value to make pixels bigger
 
     drawingCanvas.width = canvasWidth;
     drawingCanvas.height = canvasHeight;
@@ -29,13 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const ctx = drawingCanvas.getContext('2d');
     ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixelated effect
-
-    // Create an off-screen canvas for drawing temporary shapes
-    const offScreenCanvas = document.createElement('canvas');
-    offScreenCanvas.width = canvasWidth;
-    offScreenCanvas.height = canvasHeight;
-    const offScreenCtx = offScreenCanvas.getContext('2d');
-    offScreenCtx.imageSmoothingEnabled = false;
 
     function saveState() {
         history.push(drawingCanvas.toDataURL());
@@ -63,7 +57,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const rect = drawingCanvas.getBoundingClientRect();
             const x = Math.floor((event.clientX - rect.left) / scaleFactor);
             const y = Math.floor((event.clientY - rect.top) / scaleFactor);
-            ctx.drawImage(offScreenCanvas, 0, 0); // Copy the off-screen canvas to the main canvas
+            if (tool === 'line') {
+                drawLine(ctx, lastX, lastY, x, y);
+            } else if (tool === 'rectangle') {
+                drawRectangle(ctx, lastX, lastY, x, y);
+            } else if (tool === 'circle') {
+                drawCircle(ctx, lastX, lastY, x, y);
+            }
         }
         ctx.beginPath(); // Reset the path to avoid connecting lines
     });
@@ -83,18 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
             interpolateLine(ctx, lastX, lastY, x, y, brushSize, true);
             lastX = x;
             lastY = y;
-        } else if (tool === 'line' || tool === 'rectangle' || tool === 'circle') {
-            offScreenCtx.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-            offScreenCtx.drawImage(drawingCanvas, 0, 0); // Copy the main canvas to the off-screen canvas
-            if (tool === 'line') {
-                drawLine(offScreenCtx, lastX, lastY, x, y);
-            } else if (tool === 'rectangle') {
-                drawRectangle(offScreenCtx, lastX, lastY, x, y);
-            } else if (tool === 'circle') {
-                drawCircle(offScreenCtx, lastX, lastY, x, y);
-            }
-            ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-            ctx.drawImage(offScreenCanvas, 0, 0); // Copy the off-screen canvas to the main canvas
         }
     }
 
@@ -136,7 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function drawLine(ctx, x0, y0, x1, y1) {
-        interpolateLine(ctx, x0, y0, x1, y1, brushSize);
+        // Draw a line using the chunky brush without interpolation
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
     }
 
     function drawRectangle(ctx, x0, y0, x1, y1) {
@@ -193,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function drawText(ctx, x, y, text) {
-        ctx.font = '16px "Press Start 2P", cursive'; // Use a pixelated font
+        ctx.font = '54px "times'; // Use a pixelated font
         ctx.fillText(text, x, y);
     }
 
@@ -256,6 +248,23 @@ document.addEventListener('DOMContentLoaded', function() {
         link.href = dataURL;
         link.download = 'drawing.png';
         link.click();
+    });
+
+    printDrawingButton.addEventListener('click', () => {
+        const dataURL = drawingCanvas.toDataURL('image/png');
+        fetch('/print_drawing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: dataURL })
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                alert('Drawing printed successfully!');
+            } else {
+                alert('Failed to print drawing.');
+            }
+        });
     });
 
     // Example function to change brush size (can be connected to a UI element)
