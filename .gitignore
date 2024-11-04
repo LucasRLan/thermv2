@@ -1,0 +1,7 @@
+# Ignore all files in the records/images and records/messages directories
+records/images/*
+records/messages/*
+
+# Allow the directories themselves to be tracked
+!records/images/.gitkeep
+!records/messages/.gitkeep

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thermal Printer Web App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Thermal Printer Web App</h1>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Text Printing</h2>
+            <form action="{{ url_for('main.print_text_route') }}" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" maxlength="48" required>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" cols="48" rows="4" required></textarea>
+                <button type="submit">Print Message</button>
+            </form>
+        </div>
+        
+        <hr>
+        
+        <div class="section">
+            <h2>Image Printing</h2>
+            <form id="image-form" action="{{ url_for('main.print_image_route') }}" method="post" enctype="multipart/form-data">
+                <label for="image-name">Name (optional):</label>
+                <input type="text" id="image-name" name="image_name" maxlength="48">
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <label for="dither">Dithering:</label>
+                <select id="dither" name="dither" class="dither-dropdown">
+                    <option value="FLOYDSTEINBERG">Floyd-Steinberg</option>
+                    <option value="BAYER_2x2">Bayer 2x2</option>
+                    <option value="BAYER_4x4">Bayer 4x4</option>
+                    <option value="BAYER_8x8">Bayer 8x8</option>
+                    <option value="THRESHOLD">Threshold</option>
+                </select>
+                <!-- <label for="edge-enhance">Edge Enhance:</label>
+                <input type="checkbox" id="edge-enhance" name="edge_enhance"> -->
+                <br>
+                <button type="submit">Print Image</button>
+            </form>
+            <h3>Preview:</h3>
+            <img id="preview" src="" alt="Image Preview" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
