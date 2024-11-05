@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.blob())
             .then(blob => {
                 const url = URL.createObjectURL(blob);
+                console.log('Processed image URL:', url); // Debugging information
                 preview.src = url;
             })
             .catch(error => {
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.blob())
             .then(blob => {
                 const url = URL.createObjectURL(blob);
+                console.log('Processed image URL:', url); // Debugging information
                 preview.src = url;
             })
             .catch(error => {
