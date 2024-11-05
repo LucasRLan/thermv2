@@ -55,14 +55,15 @@
 
         <hr>
 
-        <div class="section">
-            <h2>Draw and Print</h2>
-            <a href="{{ url_for('main.drawing_page') }}">
-                <img id="drawing-screenshot" src="{{ url_for('static', filename='images/drawing-screenshot.png') }}" alt="Drawing Canvas" style="border:1px solid #000;">
-            </a>
-        </div>
     </div>
-    
+    <div class="section">
+        <h2>Draw and Print</h2>
+        <a href="{{ url_for('main.drawing_page') }}">
+            <img id="drawing-screenshot" src="{{ url_for('static', filename='images/drawing-screenshot.png') }}" alt="Drawing Canvas" style="border:1px solid #000;">
+        </a>
+        <p>new!</p>
+    </div>
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
         function validateImageForm() {
