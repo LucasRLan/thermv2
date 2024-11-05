@@ -6,23 +6,36 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
+    <h1>Thermal Printer Web App</h1>
+    
     <div class="container">
         <div class="section">
-            <h2>Print Text</h2>
-            <form id="text-form" action="{{ url_for('main.print_text_route') }}" method="post">
+            <h2>Text Printing</h2>
+            <form action="{{ url_for('main.print_text_route') }}" method="post">
                 <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" maxlength="48" required>
                 <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-                <button type="submit">Print Text</button>
+                <textarea id="message" name="message" cols="48" rows="4" required></textarea>
+                <button type="submit">Print Message</button>
             </form>
         </div>
-
+        
+        <hr>
+        
         <div class="section">
-            <h2>Print Image</h2>
-            <form id="image-form" action="{{ url_for('main.print_image_route') }}" method="post" enctype="multipart/form-data" onsubmit="return validateImageForm();">
-                <label for="image">Upload Image:</label>
-                <input type="file" id="image" name="image" accept="image/*" required>
+            <h2>Image Printing</h2>
+            <form id="image-form" action="{{ url_for('main.print_image_route') }}" method="post" enctype="multipart/form-data" onsubmit="return validateImageForm()">
+                <label for="image-name">Name (optional):</label>
+                <input type="text" id="image-name" name="image_name" maxlength="48">
+                <div>
+                    <button type="button" id="upload-image-button">Upload Image</button>
+                    <button type="button" id="use-camera-button">Use Camera</button>
+                </div>
+                <input type="file" id="image" name="image" accept="image/*" style="display: none;">
+                <div id="camera-container" style="display: none;">
+                    <video id="camera-view" autoplay></video>
+                    <button type="button" id="take-picture-button">Take Picture</button>
+                </div>
                 <label for="dither">Dithering:</label>
                 <select id="dither" name="dither">
                     <option value="FLOYDSTEINBERG">Floyd-Steinberg</option>
@@ -35,23 +48,20 @@
             </form>
             <h3>Preview:</h3>
             <div class="preview-container">
-                <img id="preview" src="" alt="Image Preview">
+                <img id="preview" src="" alt="Image Preview" style="max-width: 100%; height: auto;">
             </div>
-            <button id="use-camera-button">Use Camera</button>
-            <div id="camera-container"></div>
-            <button id="take-picture-button" disabled>Take Picture</button>
         </div>
 
         <hr>
 
-        <div class="centered-container">
+        <div class="section">
             <h2>Draw and Print</h2>
             <a href="{{ url_for('main.drawing_page') }}">
                 <img id="drawing-screenshot" src="{{ url_for('static', filename='images/drawing-screenshot.png') }}" alt="Drawing Canvas" style="border:1px solid #000;">
             </a>
         </div>
     </div>
-
+    
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
         function validateImageForm() {

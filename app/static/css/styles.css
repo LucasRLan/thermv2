@@ -1,8 +1,6 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: beige;
-
 }
 
 form {
@@ -92,17 +90,4 @@ hr {
 
 #clear-drawing {
     margin-top: 10px; /* Add spacing above the clear button */
-}
-
-.centered-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-}
-
-.preview-container img {
-    max-width: 100%;
-    height: auto;
 }
