@@ -25,6 +25,12 @@ button {
     padding: 10px 20px;
 }
 
+.content {
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 900px;
+}
+
 #upload-image-button, #use-camera-button {
     margin-right: 10px; /* Add spacing between the buttons */
 }
