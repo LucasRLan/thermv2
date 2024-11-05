@@ -29,7 +29,10 @@ button {
     padding: 20px;
     border-radius: 5px;
     max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 
 #upload-image-button, #use-camera-button {
     margin-right: 10px; /* Add spacing between the buttons */
