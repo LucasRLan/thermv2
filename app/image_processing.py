@@ -95,17 +95,16 @@ def enhance_edges(image):
     return edges
 
 def process_image(image_path, dither_option, edge_enhance):
+    logging.debug(f"Processing image: {image_path} with dither option: {dither_option} and edge enhance: {edge_enhance}")
     image = Image.open(image_path).convert("RGBA")
     # Create a white background image
     white_bg = Image.new("RGBA", image.size, "WHITE")
     # Composite the image with the white background
     image = Image.alpha_composite(white_bg, image).convert("RGB")
-
     image = np.array(image)
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     avg_brightness = analyze_image(gray_image)
-    print(f"Average brightness: {avg_brightness}")
-
+    logging.debug(f"Average brightness: {avg_brightness}")
     if avg_brightness < 50:
         current_settings = settings['super_dark']
     elif avg_brightness < 118:
@@ -114,7 +113,7 @@ def process_image(image_path, dither_option, edge_enhance):
         current_settings = settings['super_bright']
     else:
         current_settings = settings['bright']
-
+    logging.debug(f"Using settings: {current_settings}")
     if current_settings['equalize']:
         if current_settings['equalize_method'] == 'CLAHE':
             clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
@@ -125,22 +124,17 @@ def process_image(image_path, dither_option, edge_enhance):
             processed_image = gray_image
     else:
         processed_image = gray_image
-
     if edge_enhance or current_settings['edge_enhance']:
         edges = enhance_edges(image)
         processed_image = cv2.addWeighted(processed_image, 0.8, edges, 0.2, 0)
-
     processed_image = cv2.convertScaleAbs(processed_image, alpha=current_settings['brightness'])
     processed_image = cv2.convertScaleAbs(processed_image, alpha=current_settings['contrast'], beta=0)
-
     aspect_ratio = PRINTER_WIDTH / processed_image.shape[1]
     new_height = int(processed_image.shape[0] * aspect_ratio)
     processed_image = cv2.resize(processed_image, (PRINTER_WIDTH, new_height), interpolation=cv2.INTER_AREA)
-
     pil_image = Image.fromarray(processed_image)
     enhancer = ImageEnhance.Sharpness(pil_image)
     pil_image = enhancer.enhance(current_settings['sharpness'])
-
     if dither_option == 'BAYER_2x2':
         pil_image = apply_bayer_dithering(pil_image, BAYER_2x2)
     elif dither_option == 'BAYER_4x4':
@@ -151,5 +145,5 @@ def process_image(image_path, dither_option, edge_enhance):
         pil_image = pil_image.point(lambda p: 255 if p > 128 else 0, mode='1')
     else:
         pil_image = pil_image.convert('1', dither=Image.FLOYDSTEINBERG)
-
     return pil_image, current_settings['edge_enhance']
+

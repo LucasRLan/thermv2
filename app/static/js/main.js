@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const preview = document.getElementById('preview');
     const ditherSelect = document.getElementById('dither');
 
-    // Enable the print image button when an image is selected
     imageInput.addEventListener('change', function() {
         if (imageInput.files.length > 0) {
             printImageButton.disabled = false;
@@ -30,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle the use camera button (if applicable)
     const useCameraButton = document.getElementById('use-camera-button');
     const cameraContainer = document.getElementById('camera-container');
     const takePictureButton = document.getElementById('take-picture-button');
