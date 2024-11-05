@@ -79,8 +79,8 @@ hr {
 }
 
 #preview {
-    filter: brightness(1.2) contrast(2) grayscale(1);
-    mix-blend-mode: multiply;
+    filter: brightness(0.8) contrast(2) grayscale(1);
+    mix-blend-mode: mutiply;
 }
 
 #drawing-canvas {
