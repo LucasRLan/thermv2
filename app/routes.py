@@ -25,6 +25,7 @@ def print_text_route():
     print_text(name, message)
     return redirect(url_for('main.index'))
 
+
 @bp.route('/print_image', methods=['POST'])
 def print_image_route():
     if 'image' not in request.files or request.files['image'].filename == '':
