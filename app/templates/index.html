@@ -6,10 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
+<div class="center">
     <img src="{{ url_for('static', filename='images/banner.jpg') }}" alt="Logo" style="max-width: 100%; height: auto;">
     <h1>Thoughtleader Thinktank</h1>
     <p>Welcome to the thinktank, fellow thoughtleaders! You can use these tools to send a message, a picture, or a drawing to my thermal printer.</p>
-<div class="content">
+</div>
+    <div class="content">
     <div class="container">
         <div class="section">
             <h2>Text Printing</h2>
@@ -57,7 +59,7 @@
         <hr>
 
     </div>
-    <div class = "draw">
+    <div class = "center">
     <div class="section">
         <h2>Draw and Print</h2>
         <a href="{{ url_for('main.drawing_page') }}">
