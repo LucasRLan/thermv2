@@ -93,6 +93,13 @@ hr {
     filter: brightness(0.8) contrast(2) grayscale(1);
     mix-blend-mode: mutiply;
 }
+.draw {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 #drawing-canvas {
     border: 1px solid #000; /* Add border to the canvas */
