@@ -1,10 +1,17 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 20px;
     background-color: beige;
 
 }
 
+h1 {
+    font-size: 40px;
+}
+
+p {
+    font-size: 24px;
+
+}
 form {
     margin-bottom: 20px;
 }
@@ -147,4 +154,9 @@ hr {
 
 #flash-messages p {
     margin: 0;
+}
+
+.footer {
+    text-align:center;
+
 }

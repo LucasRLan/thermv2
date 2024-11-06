@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Thermal Printer Web App</title>
+    <title>Thoughtleader Think Tank</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 <div class="center">
     <img src="{{ url_for('static', filename='images/banner.jpg') }}" alt="Logo" style="max-width: 100%; height: auto;">
-    <h1>Thoughtleader Thinktank</h1>
-    <p>Welcome to the thinktank, fellow thoughtleaders! You can use these tools to send a message, a picture, or a drawing to my thermal printer.</p>
+    <h1>Thoughtleader Think Tank</h1>
+    <p>Welcome to the think tank, fellow thoughtleaders! You can use these tools to send a message, a picture, or a drawing to my thermal printer.</p>
 </div>
     <div class="content">
     <div class="container">
-        <div id="flash-messages"></div> <!-- Moved inside the content area -->
+        <div id="flash-messages"></div> 
         <div class="section">
             <h2>Text Printing</h2>
             <form id="text-form" action="{{ url_for('main.print_text_route') }}" method="post">
@@ -68,7 +68,15 @@
         </a>
         <p>new!</p>
     </div>
+    <br><br><br><br><br><br><br>
+    <div class="footer">
+    <p>So what kinds of stuff can you print? whatever the hell you want.</p>
+    <br>
+    <p>Cool pictures, slick pictures, neat pictures, or just raw pictures.</p>
+    <br>
+    <p>Messages, jokes, jests, poems, stories, your deepest secrets, quotes, myths, shopping lists, legends, hymns, bug reports, tunes, shopping lists, ASCII art, bedtime stories, motivational speeches, clue scrools, journals, diaries, riddles, commands, rough drafts, song lyrics, essays, and any other stuff.</p>
     </div>
+</div>
 </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
