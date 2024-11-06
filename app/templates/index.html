@@ -2,25 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Thoughtleader Think Tank</title>
+    <title>Index Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-<div class="center">
-    <img src="{{ url_for('static', filename='images/banner.jpg') }}" alt="Logo" style="max-width: 100%; height: auto;">
-    <h1>Thoughtleader Think Tank</h1>
-    <p>Welcome to the think tank, fellow thoughtleaders! You can use these tools to send a message, a picture, or a drawing to my thermal printer.</p>
-</div>
-    <div class="content">
     <div class="container">
-        <div id="flash-messages"></div> 
         <div class="section">
             <h2>Text Printing</h2>
             <form id="text-form" action="{{ url_for('main.print_text_route') }}" method="post">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" maxlength="48" required>
                 <label for="message">Message:</label>
-                <textarea id="message" name="message" maxlength="2000" cols="48" rows="4" required></textarea>
+                <textarea id="message" name="message" cols="48" rows="4" required></textarea>
                 <button type="submit">Print Message</button>
             </form>
         </div>

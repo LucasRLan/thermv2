@@ -33,7 +33,7 @@ settings = {
         'dither': 'BAYER_4x4',
         'equalize': False,
         'equalize_method': 'CLAHE',
-        'enhance_text': True,
+        'enhance_text': False,
         'edge_enhance': True
     },
     'super_dark': {
@@ -43,7 +43,7 @@ settings = {
         'dither': 'BAYER_4x4',
         'equalize': True,
         'equalize_method': 'CLAHE',
-        'enhance_text': True,
+        'enhance_text': False,
         'edge_enhance': True
     }
 }
