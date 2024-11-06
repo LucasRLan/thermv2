@@ -1,6 +1,7 @@
 body {
     margin: 20px;
     background-color: beige;
+
 }
 
 h1 {
@@ -9,8 +10,8 @@ h1 {
 
 p {
     font-size: 24px;
-}
 
+}
 form {
     margin-bottom: 20px;
 }
@@ -19,7 +20,6 @@ label {
     display: block;
     margin-top: 10px;
 }
-
 .drawing-tools {
     display: flex;
     justify-content: center;
@@ -40,16 +40,11 @@ label {
     margin: 0 10px; /* Add horizontal spacing between buttons */
 }
 
+
 input, textarea, select {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
-}
-
-textarea {
-    resize: vertical; /* Allow vertical resizing */
-    word-wrap: break-word; /* Ensure word wrapping */
-    overflow-wrap: break-word; /* Ensure word wrapping */
 }
 
 button {
@@ -64,6 +59,7 @@ button {
     margin-left: auto;
     margin-right: auto;
 }
+
 
 #upload-image-button, #use-camera-button {
     margin-right: 10px; /* Add spacing between the buttons */
@@ -124,7 +120,6 @@ hr {
     filter: brightness(0.8) contrast(2) grayscale(1);
     mix-blend-mode: mutiply;
 }
-
 .center {
     display: flex;
     flex-direction: column;
@@ -162,5 +157,6 @@ hr {
 }
 
 .footer {
-    text-align: center;
+    text-align:center;
+
 }
