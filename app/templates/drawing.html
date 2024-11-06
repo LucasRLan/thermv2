@@ -18,23 +18,25 @@
 </head>
 <body>
     <h1>Draw and Print</h1>
-    
+    <p>here you can make a little doodle and it'll print. If you are particularly attached to your masterpiece, you can save the drawing by clicking the save drawing button. </p>
+    <div id="flash-messages"></div> <!-- Add this line -->
+
     <div class="container">
-        <div class="section">
-            <canvas id="drawing-canvas" width="300" height="300" style="border:1px solid #000;"></canvas>
-            <button id="save-drawing">Save Drawing</button>
-            <button id="print-drawing">Print Drawing</button>
+        <div class="section">            <div class="drawing-tools">
             <button id="tool-pencil">Pencil</button>
-            <button id="tool-line">Line</button>
-            <button id="tool-rectangle">Rectangle</button>
-            <button id="tool-circle">Circle</button>
             <button id="tool-text">Text</button>
             <button id="tool-eraser">Eraser</button>
             <button id="undo">Undo</button>
-            <br>            <br>
+        </div> <br> <br>
+            <canvas id="drawing-canvas" width="576" height="576" style="border:1px solid #000;"></canvas>
 
-            <button id="clear-drawing">Clear Drawing</button>
+            <br><br><br><br>
 
+            <div class="drawbuttons">
+                <button id="clear-drawing">Clear Drawing</button>
+                <button id="save-drawing">Save Drawing</button>
+                <button id="print-drawing">Print Drawing</button>
+            </div>
         </div>
     </div>
     

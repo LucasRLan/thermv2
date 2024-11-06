@@ -4,12 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveDrawingButton = document.getElementById('save-drawing');
     const printDrawingButton = document.getElementById('print-drawing');
     const toolPencilButton = document.getElementById('tool-pencil');
-    const toolLineButton = document.getElementById('tool-line');
-    const toolRectangleButton = document.getElementById('tool-rectangle');
-    const toolCircleButton = document.getElementById('tool-circle');
     const toolTextButton = document.getElementById('tool-text');
     const toolEraserButton = document.getElementById('tool-eraser');
     const undoButton = document.getElementById('undo');
+    const flashMessages = document.getElementById('flash-messages');
     let drawing = false;
     let brushSize = 3; // Default brush size
     let lastX = 0;
@@ -38,43 +36,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    drawingCanvas.addEventListener('mousedown', (event) => {
+    function getTouchPos(touchEvent) {
+        const rect = drawingCanvas.getBoundingClientRect();
+        return {
+            x: Math.floor((touchEvent.touches[0].clientX - rect.left) / scaleFactor),
+            y: Math.floor((touchEvent.touches[0].clientY - rect.top) / scaleFactor)
+        };
+    }
+
+    function startDrawing(x, y) {
         drawing = true;
         saveState();
-        const rect = drawingCanvas.getBoundingClientRect();
-        lastX = Math.floor((event.clientX - rect.left) / scaleFactor);
-        lastY = Math.floor((event.clientY - rect.top) / scaleFactor);
+        lastX = x;
+        lastY = y;
         if (tool === 'pencil' || tool === 'eraser') {
-            draw(event); // Start drawing immediately
+            draw({ x, y }); // Start drawing immediately
         } else if (tool === 'text') {
-            addTextInput(event.clientX, event.clientY);
+            addTextInput(x, y);
         }
-    });
+    }
 
-    drawingCanvas.addEventListener('mouseup', (event) => {
+    function stopDrawing() {
         drawing = false;
-        if (tool === 'line' || tool === 'rectangle' || tool === 'circle') {
-            const rect = drawingCanvas.getBoundingClientRect();
-            const x = Math.floor((event.clientX - rect.left) / scaleFactor);
-            const y = Math.floor((event.clientY - rect.top) / scaleFactor);
-            if (tool === 'line') {
-                drawLine(ctx, lastX, lastY, x, y);
-            } else if (tool === 'rectangle') {
-                drawRectangle(ctx, lastX, lastY, x, y);
-            } else if (tool === 'circle') {
-                drawCircle(ctx, lastX, lastY, x, y);
-            }
-        }
         ctx.beginPath(); // Reset the path to avoid connecting lines
-    });
+    }
 
-    drawingCanvas.addEventListener('mousemove', draw);
-
-    function draw(event) {
+    function draw({ x, y }) {
         if (!drawing) return;
-        const rect = drawingCanvas.getBoundingClientRect();
-        const x = Math.floor((event.clientX - rect.left) / scaleFactor);
-        const y = Math.floor((event.clientY - rect.top) / scaleFactor);
         if (tool === 'pencil') {
             interpolateLine(ctx, lastX, lastY, x, y, brushSize);
             lastX = x;
@@ -85,6 +73,39 @@ document.addEventListener('DOMContentLoaded', function() {
             lastY = y;
         }
     }
+
+    drawingCanvas.addEventListener('mousedown', (event) => {
+        const rect = drawingCanvas.getBoundingClientRect();
+        const x = Math.floor((event.clientX - rect.left) / scaleFactor);
+        const y = Math.floor((event.clientY - rect.top) / scaleFactor);
+        startDrawing(x, y);
+    });
+
+    drawingCanvas.addEventListener('mouseup', stopDrawing);
+    drawingCanvas.addEventListener('mouseout', stopDrawing);
+    drawingCanvas.addEventListener('mousemove', (event) => {
+        const rect = drawingCanvas.getBoundingClientRect();
+        const x = Math.floor((event.clientX - rect.left) / scaleFactor);
+        const y = Math.floor((event.clientY - rect.top) / scaleFactor);
+        draw({ x, y });
+    });
+
+    drawingCanvas.addEventListener('touchstart', (event) => {
+        event.preventDefault(); // Prevent scrolling
+        const touchPos = getTouchPos(event);
+        startDrawing(touchPos.x, touchPos.y);
+    });
+
+    drawingCanvas.addEventListener('touchend', (event) => {
+        event.preventDefault(); // Prevent scrolling
+        stopDrawing();
+    });
+
+    drawingCanvas.addEventListener('touchmove', (event) => {
+        event.preventDefault(); // Prevent scrolling
+        const touchPos = getTouchPos(event);
+        draw(touchPos);
+    });
 
     function interpolateLine(ctx, x0, y0, x1, y1, radius, erase = false) {
         const dx = Math.abs(x1 - x0);
@@ -123,58 +144,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function drawLine(ctx, x0, y0, x1, y1) {
-        // Draw a line using the chunky brush without interpolation
-        ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.stroke();
-    }
-
-    function drawRectangle(ctx, x0, y0, x1, y1) {
-        const width = Math.abs(x1 - x0);
-        const height = Math.abs(y1 - y0);
-        const startX = Math.min(x0, x1);
-        const startY = Math.min(y0, y1);
-
-        for (let i = 0; i <= width; i++) {
-            drawPixelatedCircle(ctx, startX + i, startY, brushSize);
-            drawPixelatedCircle(ctx, startX + i, startY + height, brushSize);
-        }
-        for (let j = 0; j <= height; j++) {
-            drawPixelatedCircle(ctx, startX, startY + j, brushSize);
-            drawPixelatedCircle(ctx, startX + width, startY + j, brushSize);
-        }
-    }
-
-    function drawCircle(ctx, x0, y0, x1, y1) {
-        const radius = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-        for (let i = -radius; i <= radius; i++) {
-            for (let j = -radius; j <= radius; j++) {
-                const distance = Math.sqrt(i * i + j * j);
-                if (distance >= radius - 1 && distance <= radius + 1) {
-                    drawPixelatedCircle(ctx, x0 + i, y0 + j, brushSize);
-                }
-            }
-        }
-    }
-
-    function addTextInput(clientX, clientY) {
+    function addTextInput(x, y) {
         if (textInput) {
             textInput.remove();
         }
         const rect = drawingCanvas.getBoundingClientRect();
-        const x = Math.floor((clientX - rect.left) / scaleFactor);
-        const y = Math.floor((clientY - rect.top) / scaleFactor);
         textInput = document.createElement('input');
         textInput.type = 'text';
         textInput.style.position = 'absolute';
-        textInput.style.left = `${clientX}px`;
-        textInput.style.top = `${clientY}px`;
+        textInput.style.left = `${rect.left + x * scaleFactor}px`;
+        textInput.style.top = `${rect.top + y * scaleFactor}px`;
         textInput.style.fontSize = '16px';
         textInput.style.zIndex = 1000;
         document.body.appendChild(textInput);
-        textInput.focus();
+        textInput.focus(); // Set focus to the text input box
         textInput.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 drawText(ctx, x, y, textInput.value);
@@ -199,21 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
     toolPencilButton.addEventListener('click', () => {
         tool = 'pencil';
         setActiveTool(toolPencilButton);
-    });
-
-    toolLineButton.addEventListener('click', () => {
-        tool = 'line';
-        setActiveTool(toolLineButton);
-    });
-
-    toolRectangleButton.addEventListener('click', () => {
-        tool = 'rectangle';
-        setActiveTool(toolRectangleButton);
-    });
-
-    toolCircleButton.addEventListener('click', () => {
-        tool = 'circle';
-        setActiveTool(toolCircleButton);
     });
 
     toolTextButton.addEventListener('click', () => {
@@ -251,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     printDrawingButton.addEventListener('click', () => {
+        flashMessages.innerHTML = '<p>Drawing is being printed...</p>';
         const dataURL = drawingCanvas.toDataURL('image/png');
         fetch('/print_drawing', {
             method: 'POST',
@@ -258,17 +227,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ image: dataURL })
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
-                alert('Drawing printed successfully!');
+        }).then(response => {
+            if (response.ok) {
+                flashMessages.innerHTML = '<p>Drawing printed successfully!</p>';
             } else {
-                alert('Failed to print drawing.');
+                flashMessages.innerHTML = '<p>Failed to print drawing.</p>';
             }
+        }).catch(error => {
+            console.error('Error:', error);
+            flashMessages.innerHTML = '<p>Error occurred while printing drawing.</p>';
         });
     });
-
-    // Example function to change brush size (can be connected to a UI element)
-    function setBrushSize(size) {
-        brushSize = size;
-    }
 });

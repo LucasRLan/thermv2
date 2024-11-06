@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const cameraView = document.getElementById('camera-view');
     const takePictureButton = document.getElementById('take-picture-button');
     const printImageButton = document.getElementById('print-image-button');
+    const textForm = document.getElementById('text-form');
+    const flashMessages = document.getElementById('flash-messages');
+    const messageInput = document.getElementById('message');
+    const nameInput = document.getElementById('name');
 
     function updatePreview() {
         const file = imageInput.files[0];
@@ -61,4 +65,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
     imageInput.addEventListener('change', updatePreview);
     ditherSelect.addEventListener('change', updatePreview);
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the default form submission
+        flashMessages.innerHTML = '<p>Image is being printed...</p>';
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                flashMessages.innerHTML = '<p>Image printed successfully!</p>';
+                // Clear the uploaded image and preview
+                imageInput.value = '';
+                preview.src = '';
+                printImageButton.disabled = true; // Disable the button
+            } else {
+                flashMessages.innerHTML = '<p>Failed to print image.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            flashMessages.innerHTML = '<p>Error occurred while printing image.</p>';
+        });
+    });
+
+    textForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the default form submission
+        flashMessages.innerHTML = '<p>Message is being printed...</p>';
+        const formData = new FormData(textForm);
+        fetch(textForm.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                flashMessages.innerHTML = '<p>Message printed successfully!</p>';
+                // Clear the message field but keep the name
+                messageInput.value = '';
+            } else {
+                flashMessages.innerHTML = '<p>Failed to print message.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            flashMessages.innerHTML = '<p>Error occurred while printing message.</p>';
+        });
+    });
 });

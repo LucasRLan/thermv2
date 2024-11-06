@@ -13,6 +13,26 @@ label {
     display: block;
     margin-top: 10px;
 }
+.drawing-tools {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.drawing-tools button {
+    margin: 0 10px; /* Add horizontal spacing between buttons */
+}
+
+.drawbuttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.drawbuttons button {
+    margin: 0 10px; /* Add horizontal spacing between buttons */
+}
+
 
 input, textarea, select {
     width: 100%;
@@ -108,4 +128,23 @@ hr {
 
 #clear-drawing {
     margin-top: 10px; /* Add spacing above the clear button */
+}
+
+#flash-messages:empty {
+    display: none;
+}
+
+#flash-messages {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Add some space below the messages */
+    width: 100%; /* Ensure it takes the full width of the container */
+    text-align: center; /* Center the text */
+}
+
+#flash-messages p {
+    margin: 0;
 }
