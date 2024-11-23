@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I guess I have a thing for black and white dithered images</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        #frame {
+            width: 800px;
+            height: 480px;
+        }
+        .progress-container {
+            
+            width: 720px;
+            background-color: #c0c0c0; /* Windows 95 gray */
+            border: 2px solid #808080; /* Darker gray border */
+            border-radius: 2px;
+            margin: 10px auto; 
+            padding: 2px;
+        }
+        .progress-bar {
+            height: 20px;
+            width: 0;
+            background-color: #000b7c; /* Windows 95 blue */
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-family: 'MS Sans Serif', sans-serif; /* Windows 95 font */
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">back</a>
+    <div class="center">
+        <h1>Live E-Ink Display</h1>
+        <h2>Now showing: </h2><h2>The End of Evangelion (1997, 90 minutes)</h2>
+        <img id="frame-image" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Current Frame" width="800" height="480">
+        <br><br><br>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div class="content">
+
+            <br><br>
+            <div class="container">
+                <div class="section">
+                    <p id="frame-info">Frame: Loading...</p>
+                    <p id="percentage-completed">Percentage Completed: Loading...</p>
+                    <p id="estimated-runtime">Estimated time remaining: Loading...</p>
+                </div>
+                <div class ="section">
+            <p>Welcome to my Very Slow Movie Player! At home, there is an e-ink display playing a movie. The film advances 4 frames every two minutes. Here, you have a live view of what's happening on my e-ink display so you can watch along with me! Enjoy this feature film. Slowly.</p>
+        </div>    
+        </div>
+        </div><br> <a href="https://github.com/TomWhitwell/SlowMovie">VSMP code by Tom Whitwell</a> <br><br><p><br><br>
+        <p style="color:blanchedalmond">It's my website and I can do whatever I want, so maybe I'll swap between different movies sometimes. </p>
+    </div>
+    <script>
+        function updateFrameData() {
+            fetch('/get_current_frame')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('frame-info').innerText = "Frame: " + data.current_frame + "/" + data.total_frames;
+                    document.getElementById('percentage-completed').innerText = "Percentage Completed: " + data.percentage_completed.toFixed(2) + "%";
+                    document.getElementById('estimated-runtime').innerText = "Estimated Runtime: " + data.estimated_runtime;
+
+                    // Update progress bar
+                    let progressBar = document.getElementById('progress-bar');
+                    progressBar.style.width = data.percentage_completed + '%';
+
+                    // Update image
+                    let imageElement = document.getElementById('frame-image');
+                    imageElement.src = 'data:image/png;base64,' + data.frame_data;
+
+                    // Update time since last update
+                    const lastUpdateTime = new Date(data.last_update_time);
+                    const timeSinceUpdate = ((new Date()) - lastUpdateTime) / 1000;
+                    document.getElementById('time-since-update').innerText = "Time Since Last Update: " + timeSinceUpdate + " seconds";
+                })
+                .catch(error => console.error('Error fetching current frame:', error));
+        }
+
+        // Call updateFrameData immediately when the page loads
+        document.addEventListener('DOMContentLoaded', updateFrameData);
+
+        // Set interval to update frame data every 5 seconds
+        setInterval(updateFrameData, 5000); // Poll every 5 seconds
+    </script>
+</body>
+</html>
